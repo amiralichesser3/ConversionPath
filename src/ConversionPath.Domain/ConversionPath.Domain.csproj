@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="ExchangeRate\DomainModels\" />
+    <Folder Include="ExchangeRate\Validation\" />
+    <Folder Include="ExchangeRate\Repositories\" />
+    <Folder Include="ExchangeRate\Services\" />
+    <Folder Include="Utility\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+</Project>
