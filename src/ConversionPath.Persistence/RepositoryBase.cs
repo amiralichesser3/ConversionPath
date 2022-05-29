@@ -9,9 +9,10 @@ namespace ConversionPath.Persistence
         protected readonly AppDbContext _dbContext;
         protected readonly IDomainCollection<T> _domainCollection;
 
-        public RepositoryBase(AppDbContext dbContext)
+        public RepositoryBase(AppDbContext dbContext, IDomainCollection<T> domainCollection)
         {
             _dbContext = dbContext;
+            _domainCollection = domainCollection;
         }
 
         public virtual async Task<ValidationResult<T>> Add(T entity)

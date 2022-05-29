@@ -30,8 +30,7 @@ services.AddSingleton<IDomainCollection<ExchangeRate>, ExchangeRateCollection>()
 services.AddTransient<IRepositoryBase<ExchangeRate>, ExchangeRateRepository>();
 services.AddMediatR(typeof(CreateExchangeRateCommand).GetTypeInfo().Assembly);
 
-services.AddRazorPages();
-
+services.AddRazorPages(); 
 services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
 

@@ -17,7 +17,7 @@ namespace ConversionPath.Persistence.ExchangeRateAggregate.EntityConfigs
             builder.HasIndex(r => new { r.SourceCurrency, r.DestinationCurrency });
             builder.HasIndex(r => new { r.SourceCurrency, r.DestinationCurrency, r.DateTime }).IsUnique();
             builder.Property(r => r.SourceCurrency).HasMaxLength(6);
-            builder.Property(r => r.DestinationCurrency).HasMaxLength(6);
+            builder.Property(r => r.DestinationCurrency).HasMaxLength(6); 
         }
     }
 }

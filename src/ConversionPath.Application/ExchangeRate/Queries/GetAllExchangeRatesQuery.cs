@@ -23,7 +23,24 @@ namespace ConversionPath.Application.ExchangeRates.Queries
 
         public async Task<ICollection<ExchangeRateDto>> Handle(GetAllExchangeRatesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repo.GetAll();
+            var result = await _repo.GetAll(); 
+            if (!result.Any())
+            {
+                var seedData = new List<ExchangeRate>();
+                seedData.Add(new ExchangeRate { SourceCurrency = "USD", DestinationCurrency = "IRR", DateTime = DateTime.Now, Rate = 42400 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "USD", DestinationCurrency = "BTC", DateTime = DateTime.Now, Rate = 0.000034 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "EUR", DestinationCurrency = "USD", DateTime = DateTime.Now, Rate = 1.07 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "ETH", DestinationCurrency = "EUR", DateTime = DateTime.Now, Rate = 1671725 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "GBP", DestinationCurrency = "USD", DateTime = DateTime.Now, Rate = 1.26 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "BNB", DestinationCurrency = "ETH", DateTime = DateTime.Now, Rate = 0.1688 });
+
+                foreach (var item in seedData)
+                {
+                    await _repo.Add(item);
+                }
+                result = await _repo.GetAll();
+            }
+
             return _mapper.Map<ICollection<ExchangeRateDto>>(result);
         }
     }

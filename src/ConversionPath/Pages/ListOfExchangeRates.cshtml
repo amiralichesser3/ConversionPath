@@ -1,0 +1,9 @@
+﻿@page
+@model ConversionPath.Pages.ExchangeRates.ListOfExchangeRatesModel
+@{
+    @foreach(var item in Model.Rates)
+    {
+        <p>@item.SourceCurrency/@item.DestinationCurrency - <strong>@item.Rate</strong></p>
+        <br/>
+    }
+}

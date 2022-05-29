@@ -12,7 +12,7 @@ namespace ConversionPath.Persistence.ExchangeRateAggregate.Repositories
 {
     public class ExchangeRateRepository : RepositoryBase<ExchangeRate>
     {
-        public ExchangeRateRepository(AppDbContext dbContext) : base(dbContext)
+        public ExchangeRateRepository(AppDbContext dbContext, IDomainCollection<ExchangeRate> domainCollection) : base(dbContext, domainCollection)
         {
         }
 
