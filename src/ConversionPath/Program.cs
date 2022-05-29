@@ -30,10 +30,18 @@ services.AddSingleton<IDomainCollection<ExchangeRate>, ExchangeRateCollection>()
 services.AddTransient<IRepositoryBase<ExchangeRate>, ExchangeRateRepository>();
 services.AddMediatR(typeof(CreateExchangeRateCommand).GetTypeInfo().Assembly);
 
-services.AddRazorPages(); 
+services.AddRazorPages();
 services.AddDbContext<AppDbContext>(options =>
-              options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
-
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.UseInMemoryDatabase("ConversionPath");
+    }
+    else
+    {
+        options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"));
+    }
+});
 
 var app = builder.Build();
 
@@ -43,7 +51,10 @@ using (var serviceScope = app.Services?.GetService<IServiceScopeFactory>()?.Crea
     {
         var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
         context.Database.EnsureCreated();
-        context.Database.Migrate();
+        if (builder.Environment.IsProduction())
+        {
+            context.Database.Migrate();
+        }
     } 
 }
 
