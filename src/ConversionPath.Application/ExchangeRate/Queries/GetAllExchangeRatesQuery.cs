@@ -32,7 +32,9 @@ namespace ConversionPath.Application.ExchangeRates.Queries
                 seedData.Add(new ExchangeRate { SourceCurrency = "EUR", DestinationCurrency = "USD", DateTime = DateTime.Now, Rate = 1.07 });
                 seedData.Add(new ExchangeRate { SourceCurrency = "ETH", DestinationCurrency = "EUR", DateTime = DateTime.Now, Rate = 1671725 });
                 seedData.Add(new ExchangeRate { SourceCurrency = "GBP", DestinationCurrency = "USD", DateTime = DateTime.Now, Rate = 1.26 });
-                seedData.Add(new ExchangeRate { SourceCurrency = "BNB", DestinationCurrency = "ETH", DateTime = DateTime.Now, Rate = 0.1688 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "ETH", DestinationCurrency = "BNB", DateTime = DateTime.Now, Rate = 0.1688 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "TRX", DestinationCurrency = "BNB", DateTime = DateTime.Now, Rate = 0.1688 });
+                seedData.Add(new ExchangeRate { SourceCurrency = "USDT", DestinationCurrency = "TRX", DateTime = DateTime.Now, Rate = 0.1688 });
 
                 foreach (var item in seedData)
                 {

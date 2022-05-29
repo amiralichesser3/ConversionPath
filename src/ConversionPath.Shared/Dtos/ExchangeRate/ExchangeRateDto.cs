@@ -13,5 +13,17 @@ namespace ConversionPath.Shared.Dtos.ExchangeRates
         public string SourceCurrency { get; set; }
         public string DestinationCurrency { get; set; }
         public DateTime DateTime { get; set; }
+        
+        public ExchangeRateDto Clone()
+        {
+            return new ExchangeRateDto
+            {
+                Id = this.Id,
+                Rate = this.Rate,
+                SourceCurrency = this.SourceCurrency,
+                DestinationCurrency = this.DestinationCurrency,
+                DateTime = this.DateTime
+            };
+        }
     }
 }

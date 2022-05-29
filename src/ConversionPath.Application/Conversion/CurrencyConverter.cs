@@ -2,6 +2,7 @@
 using ConversionPath.Domain.Contracts;
 using ConversionPath.Domain.ExchangeRates.Entities;
 using ConversionPath.Shared.Dtos;
+using ConversionPath.Shared.Dtos.ExchangeRates;
 using MediatR;
 
 namespace ConversionPath.Application.Conversion;
@@ -20,19 +21,39 @@ public class CurrencyConverter: ICurrencyConverter
     {
         var result = new ConversionResultDto();
         var allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
-        var simpleRoute = allRates
-            .FirstOrDefault(r => r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
-             && r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower()));
-        if (simpleRoute != null)
+       
+        await FindPath(allRates, sourceCurrency, destinationCurrency);
+        if (allRates.Any())
         {
             result.IsSucessfull = true;
-            result.RatesUsed.Add(simpleRoute);
-            result.Result = amount * simpleRoute.Rate;
-        }
-        else
-        {
-            
+            result.RatesUsed = allRates;
+            if (allRates.Count == 1)
+            {
+                result.Result = allRates.First().Rate * amount;
+            }
         }
         return result;
+    }
+
+    private async Task FindPath(ICollection<ExchangeRateDto> allRates, string sourceCurrency, string destinationCurrency)
+    {
+        var simpleRoute = allRates
+            .FirstOrDefault(r => r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
+                                 && r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower()))?.Clone();
+        if (simpleRoute != null)
+        {
+            allRates.Clear();
+            allRates.Add(simpleRoute);
+            return;
+        }
+        else
+        { 
+            var possibleStart = allRates.Where(r => 
+                r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
+                || r.SourceCurrency.ToLower().Equals(destinationCurrency.ToLower())
+                || r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower())
+                || r.DestinationCurrency.ToLower().Equals(sourceCurrency.ToLower())
+            ).ToList();
+        }
     }
 }
