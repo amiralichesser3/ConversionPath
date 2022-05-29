@@ -1,4 +1,5 @@
 ﻿using ConversionPath.Domain.Contracts;
+using ConversionPath.Domain.ExchangeRate.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace ConversionPath.Domain.ExchangeRate.Entities
         public double Rate { get; set; }
         public string SourceCurrency { get; set; }
         public string DestinationCurrency { get; set; }
-        public string 
         public string Source { get; set; }
         public DateTime DateTime { get; set; }
     }
