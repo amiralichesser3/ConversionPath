@@ -27,8 +27,23 @@ namespace ConversionPath.Persistence
 
         public virtual async Task<IEnumerable<T>> GetAll()
         {
-            var dbResult = await _dbContext.Set<T>().ToListAsync();
             var memoryResult = _domainCollection.GetAll();
+            if (memoryResult.Count == 0)
+            {
+                var dbRes = await _dbContext.Set<T>()
+                    .OrderByDescending(r => r.Id)
+                    .Take(_domainCollection.GetThreshold())
+                    .ToListAsync();
+                foreach (var item in dbRes)
+                {
+                    await _domainCollection.Add(item);
+                }
+            } 
+            else if (memoryResult.Count <= _domainCollection.GetSize())
+            {
+                return memoryResult;
+            }
+            var dbResult = await _dbContext.Set<T>().ToListAsync(); 
             return dbResult.Union(memoryResult).Distinct<T>();
         }
 

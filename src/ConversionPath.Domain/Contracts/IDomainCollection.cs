@@ -4,6 +4,7 @@
     { 
         IList<T> GetAll();
         int GetSize();
+        int GetThreshold();
         Task<ValidationResult<T>> Add(T? customer);
         Task<ValidationResult<T>> Update(int id, T customer);
         bool Remove(int id);

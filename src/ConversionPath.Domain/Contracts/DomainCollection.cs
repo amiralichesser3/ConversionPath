@@ -56,5 +56,6 @@ namespace ConversionPath.Domain.Contracts
         public IList<T> GetAll() => Items.ToList();
 
         public int GetSize() => Items.Count;
+        public int GetThreshold() => THRESHOLD;
     }
 }
