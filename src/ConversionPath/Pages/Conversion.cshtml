@@ -1,0 +1,44 @@
+﻿@page
+@using ConversionPath.Domain.Contracts
+@model ConversionPath.Pages.Conversion
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Source Currency</td>
+                <td><input type="text" id="sourceCurrency" name="SourceCurrency"/></td>
+            </tr>
+            <tr>
+                <td>Destination Currency</td>
+                <td><input type="text" id="destinationCurrency" name="DestinationCurrency"/></td>
+            </tr>
+            <tr>
+                <td>Amount</td>
+                <td><input type="number" id="amount" name="Amount"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Convert" asp-page-handler="Submit"/></td>
+            </tr>
+        </table>
+        <hr/> 
+    </form>
+    @if (Model.ConversionResult != null)
+    {
+        <p>@Model.ConversionResult.Result.ToString()</p>
+    }
+</div>
+</body>
+</html>

@@ -10,6 +10,7 @@ using ConversionPath.Persistence.ExchangeRateAggregate.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using ConversionPath.Application.Conversion;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration; // allows both to access and to set up the config
@@ -28,6 +29,7 @@ services.AddSingleton(mapper);
 services.AddTransient<IValidator<ExchangeRate>, ExchangeRateValidator>();
 services.AddSingleton<IDomainCollection<ExchangeRate>, ExchangeRateCollection>();
 services.AddTransient<IRepositoryBase<ExchangeRate>, ExchangeRateRepository>();
+services.AddTransient<ICurrencyConverter, CurrencyConverter>();
 services.AddMediatR(typeof(CreateExchangeRateCommand).GetTypeInfo().Assembly);
 
 services.AddRazorPages();
