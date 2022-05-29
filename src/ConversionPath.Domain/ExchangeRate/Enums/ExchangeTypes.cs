@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConversionPath.Domain.ExchangeRate.Enums
+namespace ConversionPath.Domain.ExchangeRates.Enums
 {
     public enum ExchangeTypes
     {

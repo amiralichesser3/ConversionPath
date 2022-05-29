@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath", "ConversionPath.csproj", "{03D52A28-B4EC-4CB4-AA3D-9D030AA74959}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath", "ConversionPath.csproj", "{03D52A28-B4EC-4CB4-AA3D-9D030AA74959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath.Domain", "..\ConversionPath.Domain\ConversionPath.Domain.csproj", "{6FE8C962-CE1B-4922-8CB2-13FA3A3F1307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath.Domain", "..\ConversionPath.Domain\ConversionPath.Domain.csproj", "{6FE8C962-CE1B-4922-8CB2-13FA3A3F1307}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath.Application", "..\ConversionPath.Application\ConversionPath.Application.csproj", "{A00DE8C8-A8C3-4E23-AE3F-DA2230DBAC1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath.Application", "..\ConversionPath.Application\ConversionPath.Application.csproj", "{A00DE8C8-A8C3-4E23-AE3F-DA2230DBAC1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath.Shared", "..\ConversionPath.Shared\ConversionPath.Shared.csproj", "{8FD8C3DF-371B-425A-B7E8-94096AE13AA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath.Shared", "..\ConversionPath.Shared\ConversionPath.Shared.csproj", "{8FD8C3DF-371B-425A-B7E8-94096AE13AA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath.Persistence", "..\ConversionPath.Persistence\ConversionPath.Persistence.csproj", "{8592F627-5A31-43E3-9370-FC585EE8A9CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath.Persistence", "..\ConversionPath.Persistence\ConversionPath.Persistence.csproj", "{8592F627-5A31-43E3-9370-FC585EE8A9CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionPath.UnitTest", "..\ConversionPath.UnitTest\ConversionPath.UnitTest.csproj", "{1DD03FA7-BC45-4724-9080-458F6BDE6ABC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConversionPath.UnitTest", "..\ConversionPath.UnitTest\ConversionPath.UnitTest.csproj", "{1DD03FA7-BC45-4724-9080-458F6BDE6ABC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

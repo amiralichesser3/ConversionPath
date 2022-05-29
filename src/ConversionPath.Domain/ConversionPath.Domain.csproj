@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ExchangeRate\DomainModels\" />
-    <Folder Include="ExchangeRate\Validation\" />
+    <Folder Include="DomainModels\" />
     <Folder Include="ExchangeRate\Repositories\" />
     <Folder Include="ExchangeRate\Services\" />
     <Folder Include="Utility\" />
