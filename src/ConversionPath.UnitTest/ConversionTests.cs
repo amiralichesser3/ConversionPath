@@ -39,7 +39,7 @@ namespace ConversionPath.UnitTest
             var converter = new CurrencyConverter(mediator);
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
-            Assert.True(result.Result != 0);
+            Assert.True(result.IsSucessfull == true);
         }
 
 
@@ -52,7 +52,7 @@ namespace ConversionPath.UnitTest
             var converter = new CurrencyConverter(mediator);
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
-            Assert.True(result.Result == 0);
+            Assert.True(result.IsSucessfull == false);
         }
     }
 }
