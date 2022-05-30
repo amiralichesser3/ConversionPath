@@ -12,6 +12,7 @@ namespace ConversionPath.Shared.Dtos.ExchangeRates
         public double Rate { get; set; }
         public string SourceCurrency { get; set; }
         public string DestinationCurrency { get; set; }
+        public string SourceDestinationString => SourceCurrency.ToUpper() + "/" + DestinationCurrency.ToUpper();
         public DateTime DateTime { get; set; }
         
         public ExchangeRateDto Clone()

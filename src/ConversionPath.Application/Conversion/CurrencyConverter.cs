@@ -26,7 +26,7 @@ public class CurrencyConverter: ICurrencyConverter
             allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
         } 
        
-        var path = await FindPath(allRates, sourceCurrency, destinationCurrency);
+        var path = await FindPath(sourceCurrency, destinationCurrency);
         if (path.Any())
         {
             result.IsSucessfull = true;
@@ -49,11 +49,11 @@ public class CurrencyConverter: ICurrencyConverter
         allRates = rates;
     }
 
-    private async Task<ICollection<ExchangeRateDto>> FindPath(ICollection<ExchangeRateDto> allRates, string sourceCurrency, string destinationCurrency, bool isReverse = false)
+    private async Task<ICollection<ExchangeRateDto>> FindPath(string sourceCurrency, string destinationCurrency, bool isReverse = false)
     {
+        var sourceDestinationString = sourceCurrency.ToUpper() + "/" + destinationCurrency.ToUpper();
         var simpleRoute = allRates
-            .FirstOrDefault(r => r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
-                                 && r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower()))?.Clone();
+            .FirstOrDefault(r => r.SourceDestinationString.Equals(sourceDestinationString));
         if (simpleRoute != null)
         { 
             return new List<ExchangeRateDto> { simpleRoute };
@@ -62,7 +62,7 @@ public class CurrencyConverter: ICurrencyConverter
         {
             if (!isReverse)
             {
-                return await FindPath(allRates, destinationCurrency, sourceCurrency, true);
+                return await FindPath(destinationCurrency, sourceCurrency, true);
             }
 
             return new List<ExchangeRateDto>(); 

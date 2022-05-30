@@ -3,7 +3,7 @@
 @{
     @foreach(var item in Model.Rates)
     {
-        <p>@item.SourceCurrency/@item.DestinationCurrency - <strong>@item.Rate</strong></p>
+        <p>@item.SourceDestinationString - <strong>@item.Rate</strong></p>
         <br/>
     }
 }

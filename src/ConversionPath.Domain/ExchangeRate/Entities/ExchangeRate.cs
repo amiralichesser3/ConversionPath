@@ -11,7 +11,8 @@ namespace ConversionPath.Domain.ExchangeRates.Entities
     {
         public double Rate { get; set; }
         public string SourceCurrency { get; set; }
-        public string DestinationCurrency { get; set; } 
+        public string DestinationCurrency { get; set; }
+        public string SourceDestinationString => SourceCurrency.ToUpper() + "/" + DestinationCurrency.ToUpper();
         public DateTime DateTime { get; set; }
 
         public object Clone()
