@@ -10,50 +10,62 @@ namespace ConversionPath.Application.Conversion;
 public class CurrencyConverter: ICurrencyConverter
 {
     private readonly IMediator _mediator;
-
+    private ICollection<ExchangeRateDto> allRates;
 
     public CurrencyConverter(IMediator mediator)
     {
+        allRates = new List<ExchangeRateDto>();
         _mediator = mediator;
     }
 
     public async Task<ConversionResultDto> Convert(string sourceCurrency, string destinationCurrency, double amount)
     {
         var result = new ConversionResultDto();
-        var allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
+        if (!allRates.Any())
+        {
+            allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
+        } 
        
-        await FindPath(allRates, sourceCurrency, destinationCurrency);
-        if (allRates.Any())
+        var path = await FindPath(allRates, sourceCurrency, destinationCurrency);
+        if (path.Any())
         {
             result.IsSucessfull = true;
             result.RatesUsed = allRates;
-            if (allRates.Count == 1)
+            if (path.Count == 1)
             {
-                result.Result = allRates.First().Rate * amount;
+                result.Result = path.First().Rate * amount;
             }
         }
         return result;
     }
 
-    private async Task FindPath(ICollection<ExchangeRateDto> allRates, string sourceCurrency, string destinationCurrency)
+    public void ResetRates()
+    {
+        allRates.Clear();
+    }
+
+    public void SetRates(ICollection<ExchangeRateDto> rates)
+    {
+        allRates = rates;
+    }
+
+    private async Task<ICollection<ExchangeRateDto>> FindPath(ICollection<ExchangeRateDto> allRates, string sourceCurrency, string destinationCurrency, bool isReverse = false)
     {
         var simpleRoute = allRates
             .FirstOrDefault(r => r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
                                  && r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower()))?.Clone();
         if (simpleRoute != null)
-        {
-            allRates.Clear();
-            allRates.Add(simpleRoute);
-            return;
+        { 
+            return new List<ExchangeRateDto> { simpleRoute };
         }
         else
-        { 
-            var possibleStart = allRates.Where(r => 
-                r.SourceCurrency.ToLower().Equals(sourceCurrency.ToLower())
-                || r.SourceCurrency.ToLower().Equals(destinationCurrency.ToLower())
-                || r.DestinationCurrency.ToLower().Equals(destinationCurrency.ToLower())
-                || r.DestinationCurrency.ToLower().Equals(sourceCurrency.ToLower())
-            ).ToList();
+        {
+            if (!isReverse)
+            {
+                return await FindPath(allRates, destinationCurrency, sourceCurrency, true);
+            }
+
+            return new List<ExchangeRateDto>(); 
         }
     }
 }
