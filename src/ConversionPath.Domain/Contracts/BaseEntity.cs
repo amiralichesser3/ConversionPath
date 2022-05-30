@@ -10,8 +10,6 @@ namespace ConversionPath.Domain.Contracts
     public class BaseEntity
     {
         [Key]
-        public int Id { get; set; }
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public int Id { get; set; } 
     }
 }

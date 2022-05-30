@@ -40,6 +40,7 @@ namespace ConversionPath.Application.ExchangeRates.Queries
                 {
                     await _repo.Add(item);
                 }
+                await _repo.SaveChangesAsync();
                 result = await _repo.GetAll();
             }
 
