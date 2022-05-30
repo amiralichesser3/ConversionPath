@@ -29,7 +29,7 @@ services.AddSingleton(mapper);
 services.AddTransient<IValidator<ExchangeRate>, ExchangeRateValidator>();
 services.AddSingleton<IDomainCollection<ExchangeRate>, ExchangeRateCollection>();
 services.AddTransient<IRepositoryBase<ExchangeRate>, ExchangeRateRepository>();
-services.AddTransient<ICurrencyConverter, CurrencyConverter>();
+services.AddSingleton<ICurrencyConverter, CurrencyConverter>();
 services.AddMediatR(typeof(CreateExchangeRateCommand).GetTypeInfo().Assembly);
 
 services.AddRazorPages();

@@ -2,10 +2,6 @@
 @using ConversionPath.Domain.Contracts
 @model ConversionPath.Pages.Conversion
 
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 
 <html>
@@ -15,7 +11,7 @@
 <body>
 <div>
     <form method="post">
-        <table>
+        <table class="table">
             <tr>
                 <td>Source Currency</td>
                 <td><input type="text" id="sourceCurrency" name="SourceCurrency"/></td>

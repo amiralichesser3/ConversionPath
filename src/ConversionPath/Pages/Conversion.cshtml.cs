@@ -1,5 +1,8 @@
-﻿using ConversionPath.Domain.Contracts;
+﻿using ConversionPath.Application.ExchangeRates.Queries;
+using ConversionPath.Domain.Contracts;
 using ConversionPath.Shared.Dtos;
+using ConversionPath.Shared.Dtos.ExchangeRates;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,10 +11,14 @@ namespace ConversionPath.Pages;
 public class Conversion : PageModel
 {
     private readonly ICurrencyConverter _converter;
+    private readonly IMediator _mediator;
 
-    public Conversion(ICurrencyConverter converter)
+    private ICollection<ExchangeRateDto> _rates { get; set; }
+
+    public Conversion(ICurrencyConverter converter, IMediator mediator)
     {
         _converter = converter;
+        _mediator = mediator;
     }
     [BindProperty]
     public string SourceCurrency { get; set; }
@@ -22,11 +29,14 @@ public class Conversion : PageModel
     
     public ConversionResultDto ConversionResult { get; set; }
     
-    public void OnGet()
+    public async Task OnGetAsync()
     {
         SourceCurrency = "BNB";
         DestinationCurrency = "IRR";
         Amount = 0.5;
+
+        _rates = await _mediator.Send(new GetAllExchangeRatesQuery());
+        _converter.SetRates(_rates);
     }
     
     public async Task OnPostSubmit()

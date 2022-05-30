@@ -34,9 +34,8 @@ namespace ConversionPath.UnitTest
         [InlineData("USD", "USD", 1000)]
         [InlineData("BNB", "irr", 1000)]
         public async Task ShouldConvert(string source, string destination, double amount)
-        {
-            var mediator = A.Fake<IMediator>();  
-            var converter = new CurrencyConverter(mediator);
+        { 
+            var converter = new CurrencyConverter();
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
             Assert.True(result.IsSucessfull == true);
@@ -48,8 +47,7 @@ namespace ConversionPath.UnitTest
         [InlineData("IRR", "TRX", 1000)] 
         public async Task ShouldNotConvert(string source, string destination, double amount)
         {
-            var mediator = A.Fake<IMediator>();
-            var converter = new CurrencyConverter(mediator);
+            var converter = new CurrencyConverter();
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
             Assert.True(result.IsSucessfull == false);
@@ -61,8 +59,7 @@ namespace ConversionPath.UnitTest
         [InlineData("EUR", "IRR", 1, 45368)] 
         public async Task ShouldConvertCorrectly(string source, string destination, double amount, double expected)
         {
-            var mediator = A.Fake<IMediator>();
-            var converter = new CurrencyConverter(mediator);
+            var converter = new CurrencyConverter();
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
             Assert.True(result.Result == expected);

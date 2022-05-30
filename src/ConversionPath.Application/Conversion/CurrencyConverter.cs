@@ -10,14 +10,12 @@ using Dijkstra.NET.ShortestPath;
 namespace ConversionPath.Application.Conversion;
 
 public class CurrencyConverter: ICurrencyConverter
-{
-    private readonly IMediator _mediator;
+{ 
     private ICollection<ExchangeRateDto> allRates;
     private Graph<int, string> graph = new Graph<int, string>();
-    public CurrencyConverter(IMediator mediator)
+    public CurrencyConverter()
     {
-        allRates = new List<ExchangeRateDto>();
-        _mediator = mediator;
+        allRates = new List<ExchangeRateDto>(); 
     }
 
     public async Task<ConversionResultDto> Convert(string sourceCurrency, string destinationCurrency, double amount)
@@ -29,12 +27,7 @@ public class CurrencyConverter: ICurrencyConverter
             result.Result = amount;
             result.RatesUsed.Add(new ExchangeRateDto { Id = 0, SourceCurrency = sourceCurrency, DestinationCurrency = destinationCurrency, Rate = 1, DateTime = DateTime.Now });
             return result;
-        }
-        if (!allRates.Any())
-        {
-            allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
-            LoadGraph();
-        }
+        } 
 
         var source1 = allRates.FirstOrDefault(r => r.SourceCurrency.ToLower() == sourceCurrency.ToLower())?.SourceNodeId;
         var source2 = allRates.FirstOrDefault(r => r.DestinationCurrency.ToLower() == sourceCurrency.ToLower())?.DestinationNodeId;
