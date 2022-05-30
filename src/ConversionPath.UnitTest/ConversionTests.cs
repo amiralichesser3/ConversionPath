@@ -31,6 +31,7 @@ namespace ConversionPath.UnitTest
         [InlineData("IRR", "USD", 1000)]
         [InlineData("EUR", "IRR", 1000)]
         [InlineData("GBP", "irr", 1000)]
+        [InlineData("USD", "USD", 1000)]
         [InlineData("BNB", "irr", 1000)]
         public async Task ShouldConvert(string source, string destination, double amount)
         {
@@ -39,6 +40,19 @@ namespace ConversionPath.UnitTest
             converter.SetRates(seedData);
             var result = await converter.Convert(source, destination, amount);
             Assert.True(result.Result != 0);
+        }
+
+
+        [Theory]
+        [InlineData("xxx", "irr", 1000)]
+        [InlineData("IRR", "TRX", 1000)] 
+        public async Task ShouldNotConvert(string source, string destination, double amount)
+        {
+            var mediator = A.Fake<IMediator>();
+            var converter = new CurrencyConverter(mediator);
+            converter.SetRates(seedData);
+            var result = await converter.Convert(source, destination, amount);
+            Assert.True(result.Result == 0);
         }
     }
 }

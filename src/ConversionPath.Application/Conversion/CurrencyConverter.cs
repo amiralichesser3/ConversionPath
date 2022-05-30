@@ -4,6 +4,8 @@ using ConversionPath.Domain.ExchangeRates.Entities;
 using ConversionPath.Shared.Dtos;
 using ConversionPath.Shared.Dtos.ExchangeRates;
 using MediatR;
+using Dijkstra.NET.Graph;
+using Dijkstra.NET.ShortestPath;
 
 namespace ConversionPath.Application.Conversion;
 
@@ -11,7 +13,7 @@ public class CurrencyConverter: ICurrencyConverter
 {
     private readonly IMediator _mediator;
     private ICollection<ExchangeRateDto> allRates;
-
+    private Graph<int, string> graph = new Graph<int, string>();
     public CurrencyConverter(IMediator mediator)
     {
         allRates = new List<ExchangeRateDto>();
@@ -19,21 +21,55 @@ public class CurrencyConverter: ICurrencyConverter
     }
 
     public async Task<ConversionResultDto> Convert(string sourceCurrency, string destinationCurrency, double amount)
-    {
+    { 
         var result = new ConversionResultDto();
+        if (sourceCurrency == destinationCurrency)
+        {
+            result.IsSucessfull = true;
+            result.Result = amount;
+            result.RatesUsed.Add(new ExchangeRateDto { Id = 0, SourceCurrency = sourceCurrency, DestinationCurrency = destinationCurrency, Rate = 1, DateTime = DateTime.Now });
+            return result;
+        }
         if (!allRates.Any())
         {
             allRates = await _mediator.Send(new GetAllExchangeRatesQuery());
-        } 
-       
-        var path = await FindPath(sourceCurrency, destinationCurrency);
-        if (path.Any())
+            LoadGraph();
+        }
+
+        var source1 = allRates.FirstOrDefault(r => r.SourceCurrency.ToLower() == sourceCurrency.ToLower())?.SourceNodeId;
+        var source2 = allRates.FirstOrDefault(r => r.DestinationCurrency.ToLower() == sourceCurrency.ToLower())?.DestinationNodeId;
+        var source = (uint?)(source1 ?? source2);
+
+        var destination1 = allRates.FirstOrDefault(r => r.SourceCurrency.ToLower() == destinationCurrency.ToLower())?.SourceNodeId;
+        var destination2 = allRates.FirstOrDefault(r => r.DestinationCurrency.ToLower() == destinationCurrency.ToLower())?.DestinationNodeId;
+        var destination = (uint?)(destination1 ?? destination2);
+
+        if (source == null || destination == null)
         {
-            result.IsSucessfull = true;
-            result.RatesUsed = allRates;
-            if (path.Count == 1)
+            return result;
+        }
+
+        var path = graph.Dijkstra((uint)source, (uint)destination).GetPath().ToList();
+
+        if (!path.Any()) return result;
+
+        result.IsSucessfull = true;
+        for (int i = 0; i < path.Count() - 1; i++)
+        {
+            var rate = allRates.FirstOrDefault(r => r.SourceNodeId == path[i] && r.DestinationNodeId == path[i + 1]);
+            if (rate != null)
             {
-                result.Result = path.First().Rate * amount;
+                result.RatesUsed.Add(rate);
+                result.Result = rate.Rate * amount;
+            }
+            else
+            {
+                rate = allRates.FirstOrDefault(r => r.SourceNodeId == path[i+1] && r.DestinationNodeId == path[i]);
+                if (rate != null)
+                {
+                    result.RatesUsed.Add(rate);
+                    result.Result = amount / rate.Rate;
+                }
             }
         }
         return result;
@@ -42,30 +78,42 @@ public class CurrencyConverter: ICurrencyConverter
     public void ResetRates()
     {
         allRates.Clear();
+        graph = new Graph<int, string>();
     }
 
     public void SetRates(ICollection<ExchangeRateDto> rates)
     {
+        graph = new Graph<int, string>();
         allRates = rates;
+        LoadGraph();
     }
 
-    private async Task<ICollection<ExchangeRateDto>> FindPath(string sourceCurrency, string destinationCurrency, bool isReverse = false)
+    private void LoadGraph()
     {
-        var sourceDestinationString = sourceCurrency.ToUpper() + "/" + destinationCurrency.ToUpper();
-        var simpleRoute = allRates
-            .FirstOrDefault(r => r.SourceDestinationString.Equals(sourceDestinationString));
-        if (simpleRoute != null)
-        { 
-            return new List<ExchangeRateDto> { simpleRoute };
-        }
-        else
-        {
-            if (!isReverse)
-            {
-                return await FindPath(destinationCurrency, sourceCurrency, true);
-            }
+        var distinctCurrencies = allRates.Select(r => r.SourceCurrency).Union(allRates.Select(r => r.DestinationCurrency)).Distinct();
 
-            return new List<ExchangeRateDto>(); 
+        uint i = 0;
+
+        foreach (var currency in distinctCurrencies)
+        {
+            i++;
+            graph.AddNode((int)i);
+            var s = allRates.Where(r => r.SourceCurrency == currency);
+            foreach (var item in s)
+            {
+                item.SourceNodeId = i;
+            }
+            var d = allRates.Where(r => r.DestinationCurrency == currency);
+            foreach (var item in d)
+            {
+                item.DestinationNodeId = i;
+            }
         }
-    }
+
+        foreach (var rate in allRates)
+        {
+            graph.Connect(rate.SourceNodeId, rate.DestinationNodeId, 1, string.Empty);
+            graph.Connect(rate.DestinationNodeId, rate.SourceNodeId, 1, string.Empty);
+        }
+    } 
 }
