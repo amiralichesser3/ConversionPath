@@ -52,7 +52,7 @@ public class CurrencyConverter: ICurrencyConverter
         var path = graph.Dijkstra((uint)source, (uint)destination).GetPath().ToList();
 
         if (!path.Any()) return result;
-
+        result.Result = amount;
         result.IsSucessfull = true;
         for (int i = 0; i < path.Count() - 1; i++)
         {
@@ -60,7 +60,7 @@ public class CurrencyConverter: ICurrencyConverter
             if (rate != null)
             {
                 result.RatesUsed.Add(rate);
-                result.Result = rate.Rate * amount;
+                result.Result = rate.Rate * result.Result;
             }
             else
             {
@@ -68,7 +68,7 @@ public class CurrencyConverter: ICurrencyConverter
                 if (rate != null)
                 {
                     result.RatesUsed.Add(rate);
-                    result.Result = amount / rate.Rate;
+                    result.Result = result.Result / rate.Rate;
                 }
             }
         }

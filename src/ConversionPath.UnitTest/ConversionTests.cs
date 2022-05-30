@@ -54,5 +54,18 @@ namespace ConversionPath.UnitTest
             var result = await converter.Convert(source, destination, amount);
             Assert.True(result.IsSucessfull == false);
         }
+
+        [Theory]
+        [InlineData("usd", "irr", 1, 42400)]
+        [InlineData("IRR", "USD", 42400, 1)]
+        [InlineData("EUR", "IRR", 1, 45368)] 
+        public async Task ShouldConvertCorrectly(string source, string destination, double amount, double expected)
+        {
+            var mediator = A.Fake<IMediator>();
+            var converter = new CurrencyConverter(mediator);
+            converter.SetRates(seedData);
+            var result = await converter.Convert(source, destination, amount);
+            Assert.True(result.Result == expected);
+        } 
     }
 }
